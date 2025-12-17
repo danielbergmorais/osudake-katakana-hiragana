@@ -16,7 +16,7 @@ export class CaracteresPage {
   play(src: string): Promise<void> {
     return new Promise((resolve, reject) => {
 
-      let path = '../../assets/audios/' + src + '.mp3';
+      let path = document.baseURI + 'assets/audios/' + src + '.mp3';
       const audio = new Audio(path);
 
       const selectedElement = document.getElementById(src);

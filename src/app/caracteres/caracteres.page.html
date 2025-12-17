@@ -28,7 +28,7 @@
     <ion-grid>
       <ion-row *ngFor="let row of caracteresList; let i = index" class="ion-justify-content-between">
         <ion-col *ngFor="let c of row" (click)="play(c)" id="{{c}}" [ngClass]="{chiisai: i > 13}">
-          <img [src]="'../../assets/' + type + '/'+ c +'.png'" alt="{{c}}">
+          <img [src]="'assets/' + type + '/'+ c +'.png'" alt="{{c}}">
         </ion-col>
       </ion-row>
     </ion-grid>
