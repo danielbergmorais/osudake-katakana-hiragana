@@ -1,0 +1,7 @@
+{
+  "name": "Osudake Katakana Hiragana",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
