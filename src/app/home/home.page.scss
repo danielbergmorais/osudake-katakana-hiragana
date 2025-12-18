@@ -1,0 +1,38 @@
+.osu {
+    width: 80px;
+    height: 80px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 50% 0%;
+    border: 4px grey solid;
+    background-color: white;
+    background-size: 140%;
+    border-radius: 20px;
+    margin: 10px;
+
+    &.success {
+        border: 4px #2dd55b solid;
+    }
+
+    &.error {
+        border: 4px #f24c58 solid;
+    }
+}
+
+.content {
+    padding: 10px 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    border: 2px solid #000;
+}
+
+.toast-custom {
+    --background: #2dd36f; // verde Ionic success
+    --color: #ffffff !important;
+}

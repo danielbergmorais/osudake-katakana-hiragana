@@ -12,7 +12,47 @@
       <ion-title size="large">Home</ion-title>
     </ion-toolbar>
   </ion-header>
-  <div class="container">
-    <h1>Hello World!</h1>
+
+  <!-- 
+    // Listagem de katakanas e hiraganas
+    <div *ngFor="let row of caracteresList; let i = index" class="ion-justify-content-between">
+      <div *ngFor="let c of row" id="{{c}}" class="osu" style="background-image: url('assets/katakana/{{c}}.png');"
+        [hidden]="i > 13">
+      </div>
+    </div> 
+    
+    -->
+
+  <div class="content">
+    <h1>Osudake</h1>
+
+    <div class="container">
+      <div id="a" class="osu" style="background-image: url('assets/katakana/glyphs/a.png');" (click)="play('a')">
+      </div>
+      <div id="e" class="osu" style="background-image: url('assets/katakana/glyphs/e.png');" (click)="play('e')">
+      </div>
+      <div id="i" class="osu" style="background-image: url('assets/katakana/glyphs/i.png');" (click)="play('i')">
+      </div>
+      <div id="o" class="osu" style="background-image: url('assets/katakana/glyphs/o.png');" (click)="play('o')">
+      </div>
+      <div id="u" class="osu" style="background-image: url('assets/katakana/glyphs/u.png');" (click)="play('u')">
+      </div>
+
+      <div class="osu" style="background-image: url('assets/katakana/glyphs/ka.png');" (click)="play('ka')">
+      </div>
+      <div class="osu" style="background-image: url('assets/katakana/glyphs/ke.png');" (click)="play('ke')">
+      </div>
+      <div class="osu" style="background-image: url('assets/katakana/glyphs/ki.png');" (click)="play('ki')">
+      </div>
+      <div class="osu" style="background-image: url('assets/katakana/glyphs/ko.png');" (click)="play('ko')">
+      </div>
+      <div class="osu" style="background-image: url('assets/katakana/glyphs/ku.png');" (click)="play('ku')">
+      </div>
+
+
+    </div>
+    <ion-button color="danger" expand="block" shape="round" (click)="resetSequence()">
+      Reset
+    </ion-button>
   </div>
 </ion-content>

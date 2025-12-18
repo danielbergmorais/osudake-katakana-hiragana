@@ -1,0 +1,40 @@
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 0.8;
+  /* altura proporcional */
+  margin: auto;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.card {
+  position: absolute;
+  width: 12vw;
+  /* tamanho relativo ao viewport */
+  max-width: 60px;
+  aspect-ratio: 1 / 1;
+  font-size: 6vw;
+  min-inline-size: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  background: white;
+  border-radius: 4px;
+  user-select: none;
+  box-sizing: border-box;
+  cursor: default;
+  color: black;
+  transform: translate(-50%, -50%);
+}
+
+.red {
+  border: 3px solid red;
+}
+
+.blue {
+  border: 3px solid blue;
+}

@@ -22,3 +22,16 @@
         }
     }
 }
+
+.background-white {
+    background-color: white;
+}
+
+.text-center {
+    text-align: center;
+    padding: 20px;
+
+    ion-icon {
+        color: white !important;
+    }
+}
