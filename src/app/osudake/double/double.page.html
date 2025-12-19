@@ -1,6 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>double</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Osudake</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,12 +15,14 @@
   </ion-header>
 
   <div class="container">
-    <div *ngFor="let card of levels.level1" class="card" [ngClass]="card.color" [style.top.%]="card.top"
-      [style.left.%]="card.left">
-      {{ card.char }}
+    <!-- <ion-button (click)="irParaOutraPagina()">
+      Ir para Resultado
+    </ion-button> -->
+    <div *ngFor="let card of cards" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
+      [style.left.%]="card.left" style="background-image: url('assets/{{type}}/glyphs/{{card.char}}.png');">
     </div>
   </div>
-
+  <!-- 
   <div class="container">
     <div *ngFor="let card of levels.level2" class="card" [ngClass]="card.color" [style.top.%]="card.top"
       [style.left.%]="card.left">
@@ -37,6 +42,6 @@
       [style.left.%]="card.left">
       {{ card.char }}
     </div>
-  </div>
+  </div> -->
 
 </ion-content>

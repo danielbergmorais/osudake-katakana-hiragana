@@ -1,13 +1,13 @@
 .container {
   position: relative;
-  width: 100%;
   max-width: 400px;
-  aspect-ratio: 0.8;
+  width: 100%;
   /* altura proporcional */
+  aspect-ratio: 0.8;
   margin: auto;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  // border-radius: 8px;
+  // background: #f9f9f9;
+  // border: 1px solid #ddd;
 }
 
 .card {
@@ -16,7 +16,7 @@
   /* tamanho relativo ao viewport */
   max-width: 60px;
   aspect-ratio: 1 / 1;
-  font-size: 6vw;
+  font-size: 42px;
   min-inline-size: 32px;
   display: flex;
   justify-content: center;
@@ -37,4 +37,27 @@
 
 .blue {
   border: 3px solid blue;
+}
+
+.osu {
+  width: 80px;
+  height: 80px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 0%;
+  border: 4px grey solid;
+  background-color: white;
+  background-size: 140%;
+  border-radius: 20px;
+
+  position: absolute;
+  transform: translate(-50%, -50%);
+
+  &.success {
+    border: 4px #2dd55b solid;
+  }
+
+  &.error {
+    border: 4px #f24c58 solid;
+  }
 }
