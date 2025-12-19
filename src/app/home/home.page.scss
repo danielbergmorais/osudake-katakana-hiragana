@@ -23,6 +23,11 @@
     padding: 10px 20px;
 }
 
+.text-center {
+    text-align: center;
+    justify-content: center;
+}
+
 .container {
     width: 100%;
     max-width: 600px;
@@ -30,9 +35,36 @@
     flex-wrap: wrap;
     gap: 10px;
     border: 2px solid #000;
+    margin: 0 auto;
 }
 
-.toast-custom {
-    --background: #2dd36f; // verde Ionic success
-    --color: #ffffff !important;
+.toast-layout-baseline .toast-content {
+
+    .success-toast {
+        background: #e6f9f0;
+        color: #1b5e20;
+    }
+
+    .toast-success {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .text {
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 15px;
+            color: white;
+        }
+
+        .jp {
+            font-size: 14px;
+            color: #00695c;
+        }
+    }
 }

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { ToastController } from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+
 import { caracterList } from 'src/services/caracter.list';
-import { IonButton, ToastController } from '@ionic/angular/standalone';
 
 
 @Component({
@@ -13,14 +15,18 @@ import { IonButton, ToastController } from '@ionic/angular/standalone';
 export class HomePage {
   public caracteresList = caracterList;
   actual = 0;
-  letter = '';
+  type = 'hiragana';
+  options: string[] = ['a', 'ka', 'sa', 'ta', 'na', 'ha', 'ma', 'ya', 'ra', 'wa'];
+  selected: string[] = [];
 
-  constructor(private toastController: ToastController) { }
+  constructor(private toastController: ToastController, private router: Router) { }
 
+  ngOnInit() {
+    const tp = localStorage.getItem('type');
+    if (tp !== null) this.type = tp;
+  }
   play(src: string): Promise<void> {
     return new Promise((resolve, reject) => {
-
-      this.checkSequence(src);
 
       let path = document.baseURI + 'assets/audios/' + src + '.mp3';
       const audio = new Audio(path);
@@ -48,6 +54,32 @@ export class HomePage {
     });
   }
 
+  selectOptions(target: string) {
+    const index = this.selected.indexOf(target);
+    this.play(target);
+
+    if (index >= 0) {
+      this.selected.splice(index, 1);
+    } else if (this.selected.length < 2) {
+      this.selected.push(target);
+    }
+  }
+
+  confirm() {
+    if (this.selected.length > 0) {
+      localStorage.setItem('options', JSON.stringify(this.selected));
+      (document.activeElement as HTMLElement)?.blur();
+      this.router.navigate(['/double']);
+    }
+
+  }
+
+  onTypeChange(event: any) {
+    this.type = event.detail.value;
+    localStorage.setItem('type', this.type);
+  }
+
+  //Move to right place
   async checkSequence(target: string) {
     let correct = ['a', 'i', 'u', 'e', 'o'];
 
@@ -66,12 +98,20 @@ export class HomePage {
       }
       if (this.actual == correct.length) {
         const toast = await this.toastController.create({
-          message: 'Parabéns! おめでとう!',
-          duration: 4000,
+          message: `
+            <div class="toast-success">
+              <div class="text">
+                <div class="title">Bom trabalho! Você conseguiu!</div>
+                <div class="jp">よくできました! </div>
+                <div class="jp">おめでとうございます</div>
+              </div>
+            </div>
+    `,
+          icon: 'checkmark-circle',
+          duration: 5000,
           position: 'bottom',
           color: 'success',
-          cssClass: 'toast-custom'
-
+          cssClass: 'success-toast',
         });
         await toast.present();
       }
