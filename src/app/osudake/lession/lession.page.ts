@@ -18,4 +18,20 @@ export class LessionPage implements OnInit {
     this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
 
   }
+
+  filtrarArrays(
+    primeiro: string[][],
+    segundo: Record<string, string[]>
+  ) {
+    const validos = new Set([...primeiro[0], ...primeiro[1]]);
+    const resultado: Record<string, string[]> = {};
+
+    for (const [chave, silabas] of Object.entries(segundo)) {
+      if (silabas.every(s => validos.has(s))) {
+        resultado[chave] = silabas;
+      }
+    }
+
+    return resultado;
+  }
 }
