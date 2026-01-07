@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { caracterList } from 'src/services/caracter.list';
+import { TypeStateService } from 'src/services/type-state.service';
+
 type Color = 'red' | 'blue';
 interface GridItem {
   char: string;
@@ -31,8 +32,8 @@ export class DoublePage implements OnInit {
   selectedRed: string[] = [];
   selectedBlue: string[] = [];
   cards: Card[] = [];
-  type: string = 'hiragana';
 
+  type$ = this.typeState.type$;
 
   shuffleRed: string[] = [];
   shuffleBlue: string[] = [];
@@ -167,8 +168,9 @@ export class DoublePage implements OnInit {
     // level5: this.generateLayout(this.level4Grid, 7, 3),
   };
 
-  constructor(private router: Router) {
-
+  constructor(
+    private router: Router,
+    private typeState: TypeStateService) {
   }
 
   ngOnInit() {
@@ -177,8 +179,6 @@ export class DoublePage implements OnInit {
   }
 
   loadOptions() {
-    const tp = localStorage.getItem('type');
-    if (tp !== null) this.type = tp;
 
     const op = localStorage.getItem('options');
     if (!op) return;
@@ -226,6 +226,6 @@ export class DoublePage implements OnInit {
   }
 
   irParaOutraPagina() {
-    this.router.navigate(['/lession']);
+    this.router.navigate(['/lesson']);
   }
 }

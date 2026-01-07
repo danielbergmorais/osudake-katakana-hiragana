@@ -1,0 +1,33 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Lição</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <div class="container">
+
+    <div class="content">
+
+      <div class="lesson">
+        <div class="image" style="background-image: url('assets/lessons/ie.jpg');" (click)="play('lesson/ie')"></div>
+
+        <div class="text">
+          <p><strong>Português:</strong><br> Casa</p>
+
+          <p><strong>Romanji:</strong><br> IE</p>
+        </div>
+      </div>
+
+      <div class="glyphs">
+        <div *ngFor="let op of options" id="{{op}}" class="osu" [class.success]="selected.includes(op)"
+          (click)="selectOptions(op)" style="background-image: url('assets/{{type$ | async}}/glyphs/{{op}}.png');">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</ion-content>

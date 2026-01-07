@@ -15,33 +15,12 @@
   </ion-header>
 
   <div class="container">
-    <!-- <ion-button (click)="irParaOutraPagina()">
-      Ir para Resultado
-    </ion-button> -->
+
     <div *ngFor="let card of cards" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
-      [style.left.%]="card.left" style="background-image: url('assets/{{type}}/glyphs/{{card.char}}.png');">
+      [style.left.%]="card.left" style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
     </div>
-  </div>
-  <!-- 
-  <div class="container">
-    <div *ngFor="let card of levels.level2" class="card" [ngClass]="card.color" [style.top.%]="card.top"
-      [style.left.%]="card.left">
-      {{ card.char }}
-    </div>
+
   </div>
 
-  <div class="container">
-    <div *ngFor="let card of levels.level3" class="card" [ngClass]="card.color" [style.top.%]="card.top"
-      [style.left.%]="card.left">
-      {{ card.char }}
-    </div>
-  </div>
-
-  <div class="container">
-    <div *ngFor="let card of levels.level4" class="card" [ngClass]="card.color" [style.top.%]="card.top"
-      [style.left.%]="card.left">
-      {{ card.char }}
-    </div>
-  </div> -->
 
 </ion-content>

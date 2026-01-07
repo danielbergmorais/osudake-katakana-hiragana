@@ -13,22 +13,14 @@
     </ion-toolbar>
   </ion-header>
 
-  <!-- 
-    // Listagem de katakanas e hiraganas
-    <div *ngFor="let row of caracteresList; let i = index" class="ion-justify-content-between">
-      <div *ngFor="let c of row" id="{{c}}" class="osu" style="background-image: url('assets/katakana/{{c}}.png');"
-        [hidden]="i > 13">
-      </div>
-    </div> 
-    
-    -->
   <div class="content">
     <h1>おすだけ</h1>
     <h3>Osudake</h3>
     <p>Escolha a opção entre Hiragana e Katakana:</p>
   </div>
+
   <div class="content">
-    <ion-segment [value]="type" (ionChange)="onTypeChange($event)">
+    <ion-segment [value]="(type$ | async)" (ionChange)="onTypeChange($event)">
       <ion-segment-button value="hiragana">
         <ion-label>Hiragana</ion-label>
       </ion-segment-button>
@@ -37,17 +29,18 @@
       </ion-segment-button>
     </ion-segment>
   </div>
+
   <div class="content text-center">
     <p>Agora escolha entre uma ou duas opções para testar seus conhecimentos na ordem correta:</p>
   </div>
+
   <div class="content ">
     <div class="container text-center">
-
       <div *ngFor="let op of options" id="{{op}}" class="osu" [class.success]="selected.includes(op)"
-        (click)="selectOptions(op)" style="background-image: url('assets/{{type}}/glyphs/{{op}}.png');">
+        (click)="selectOptions(op)" style="background-image: url('assets/{{type$ | async}}/glyphs/{{op}}.png');">
       </div>
-
     </div>
+
     <div class="container text-center">
       <ion-button color="primary" expand="snall" shape="round" (click)="confirm()">
         Continuar

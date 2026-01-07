@@ -14,7 +14,7 @@
   </ion-header>
 
   <div class="hiragana">
-    <ion-segment [value]="type" (ionChange)="onTypeChange($event)">
+    <ion-segment [value]="(type$ | async)" (ionChange)="onTypeChange($event)">
       <ion-segment-button value="hiragana">
         <ion-label>Hiragana</ion-label>
       </ion-segment-button>
@@ -26,17 +26,17 @@
 
   <div class="hiragana">
     <ion-grid>
-      <!-- (click)="play(c)" -->
       <ion-row *ngFor="let row of caracteresList; let i = index" class="ion-justify-content-between">
         <ion-col *ngFor="let c of row" id="modal_{{c}}" [ngClass]="{chiisai: i > 13}">
-          <img [src]="'assets/' + type + '/glyphs/'+ c +'.png'" alt="{{c}}">
+
+          <img [src]="'assets/' + (type$ | async) + '/glyphs/'+ c +'.png'" alt="{{c}}">
 
           <ion-modal trigger="modal_{{c}}" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
             <ng-template>
               <div class="block">
-                <h3>{{type | titlecase}}</h3> <br>
+                <h3>{{(type$ | async) | titlecase}}</h3> <br>
                 <div class="background-white">
-                  <img [src]="'assets/' + type + '/stroke-order/'+ c +'.png'" alt="{{c}}">
+                  <img [src]="'assets/' + (type$ | async) + '/stroke-order/'+ c +'.png'" alt="{{c}}">
                 </div>
                 <div class="text-center">
                   <ion-button (click)="play(c)" color="success">
@@ -46,6 +46,7 @@
               </div>
             </ng-template>
           </ion-modal>
+
         </ion-col>
       </ion-row>
     </ion-grid>

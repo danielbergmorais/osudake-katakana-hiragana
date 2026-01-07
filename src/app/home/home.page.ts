@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { ToastController } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
-
+import { HelpersService } from 'src/services/helpers.service';
 import { caracterList } from 'src/services/caracter.list';
-
+import { TypeStateService } from 'src/services/type-state.service';
 
 @Component({
   selector: 'app-home',
@@ -15,43 +15,30 @@ import { caracterList } from 'src/services/caracter.list';
 export class HomePage {
   public caracteresList = caracterList;
   actual = 0;
-  type = 'hiragana';
   options: string[] = ['a', 'ka', 'sa', 'ta', 'na', 'ha', 'ma', 'ya', 'ra', 'wa'];
   selected: string[] = [];
+  type$ = this.typeState.type$;
 
-  constructor(private toastController: ToastController, private router: Router) { }
+  constructor(
+    private toastController: ToastController,
+    private router: Router,
+    private helpers: HelpersService,
+    private typeState: TypeStateService
+  ) { }
 
   ngOnInit() {
-    const tp = localStorage.getItem('type');
-    if (tp !== null) this.type = tp;
+
   }
-  play(src: string): Promise<void> {
-    return new Promise((resolve, reject) => {
 
-      let path = document.baseURI + 'assets/audios/' + src + '.mp3';
-      const audio = new Audio(path);
+  ngOnDestroy() {
+  }
 
-      const selectedElement = document.getElementById(src);
-      if (selectedElement) {
-        selectedElement.classList.add('active');
-      }
+  onTypeChange(event: any) {
+    this.typeState.setType(event.detail.value);
+  }
 
-      audio.onended = () => {
-        if (selectedElement) {
-          selectedElement.classList.remove('active');
-        }
-        resolve();
-      };
-
-      audio.onerror = (e) => {
-        if (selectedElement) {
-          selectedElement.classList.remove('active');
-        }
-        reject(e);
-      };
-
-      audio.play();
-    });
+  play(src: string) {
+    this.helpers.play(src);
   }
 
   selectOptions(target: string) {
@@ -74,10 +61,6 @@ export class HomePage {
 
   }
 
-  onTypeChange(event: any) {
-    this.type = event.detail.value;
-    localStorage.setItem('type', this.type);
-  }
 
   //Move to right place
   async checkSequence(target: string) {

@@ -11,8 +11,8 @@ const routes: Routes = [
     loadChildren: () => import('./osudake/double/double.module').then(m => m.DoublePageModule)
   },
   {
-    path: 'lession',
-    loadChildren: () => import('./osudake/lession/lession.module').then( m => m.LessionPageModule)
+    path: 'lesson',
+    loadChildren: () => import('./osudake/lesson/lesson.module').then( m => m.LessonPageModule)
   }
 ];
 @NgModule({
