@@ -16,10 +16,11 @@
 
   <div class="container">
     <div *ngFor="let card of cards1" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
-      [style.left.%]="card.left" style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
+      [class.success]="selected.includes(card.char)" (click)="selectOptions(card.char)" [style.left.%]="card.left"
+      style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
     </div>
   </div>
-  <br> <br>
+  <!-- <br> <br>
   <div class="container">
     <div *ngFor="let card of cards2" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
       [style.left.%]="card.left" style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
@@ -42,7 +43,7 @@
     <div *ngFor="let card of cards5" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
       [style.left.%]="card.left" style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
     </div>
-  </div>
+  </div> -->
 
 
 </ion-content>

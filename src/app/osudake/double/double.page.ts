@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { caracterList } from 'src/services/caracter.list';
 import { TypeStateService } from 'src/services/type-state.service';
+import { HelpersService } from 'src/services/helpers.service';
 
 type Color = 'red' | 'blue';
 interface GridItem {
@@ -28,6 +29,8 @@ interface Card {
 
 
 export class DoublePage implements OnInit {
+  selected: string[] = [];
+
   options: string[] = [];
   selectedRed: string[] = [];
   selectedBlue: string[] = [];
@@ -166,6 +169,7 @@ export class DoublePage implements OnInit {
 
   constructor(
     private router: Router,
+    private helpers: HelpersService,
     private typeState: TypeStateService) {
   }
 
@@ -272,5 +276,22 @@ export class DoublePage implements OnInit {
 
   irParaOutraPagina() {
     this.router.navigate(['/lesson']);
+  }
+
+
+  selectOptions(target: string) {
+    const index = this.selected.indexOf(target);
+    this.helpers.play(target);
+
+    if (index >= 0) {
+      this.selected.splice(index, 1);
+    } else if (this.selected.length < 5) {
+      this.selected.push(target);
+    }
+    console.log(this.selected)
+  }
+
+  play(src: string) {
+    this.helpers.play(src);
   }
 }
