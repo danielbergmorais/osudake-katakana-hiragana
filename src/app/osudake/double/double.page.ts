@@ -4,6 +4,13 @@ import { caracterList } from 'src/services/caracter.list';
 import { TypeStateService } from 'src/services/type-state.service';
 import { HelpersService } from 'src/services/helpers.service';
 
+
+
+//TODO
+//1 - Refatorar interfaces
+//2 - Usar função grid com array e não variaveis repetidas
+//3 - Replicar pro grid unico
+
 type Color = 'red' | 'blue';
 interface GridItem {
   char: string;
@@ -18,6 +25,12 @@ interface Card {
   top: number;
   left: number;
 }
+interface Level {
+  grid: GridItem[];
+  cards: Card[]; // ou Card[][] se você tiver a interface
+}
+
+type CardsKey = 'cards1' | 'cards2' | 'cards3' | 'cards4' | 'cards5';
 
 
 @Component({
@@ -46,7 +59,12 @@ export class DoublePage implements OnInit {
 
   shuffleRed: string[] = [];
   shuffleBlue: string[] = [];
-  steps: boolean[] = [false, false, false, false, false];
+
+  sequenciaCorreta: string[] = [];
+  sequenciaAtualIndex = 0;
+  etapaAtual = 0;
+  progressoClique = 0;
+  sequencias: string[][] = [];
 
   simpleGrid1: GridItem[] = [
     { char: 'う', color: 'red', row: 2, col: 1 },
@@ -175,7 +193,13 @@ export class DoublePage implements OnInit {
 
   ngOnInit() {
     this.loadOptions();
-    this.prepareGrid();
+
+    if (!this.selectedRed.length && !this.selectedBlue.length)
+      this.prepareRedGrid();
+    else
+      this.prepareGrid();
+
+    this.begin()
   }
 
   loadOptions() {
@@ -198,6 +222,30 @@ export class DoublePage implements OnInit {
 
     const shuffled = [...this.selectedRed].sort(() => Math.random() - 0.5);
 
+    this.simpleGrid1 = this.simpleGrid1
+      .slice(0, shuffled.length)
+      .map((item, index) => ({
+        ...item,
+        char: shuffled[index]
+      }));
+    this.simpleGrid2 = this.simpleGrid2
+      .slice(0, shuffled.length)
+      .map((item, index) => ({
+        ...item,
+        char: shuffled[index]
+      }));
+    this.simpleGrid3 = this.simpleGrid3
+      .slice(0, shuffled.length)
+      .map((item, index) => ({
+        ...item,
+        char: shuffled[index]
+      }));
+    this.simpleGrid4 = this.simpleGrid4
+      .slice(0, shuffled.length)
+      .map((item, index) => ({
+        ...item,
+        char: shuffled[index]
+      }));
     this.simpleGrid5 = this.simpleGrid5
       .slice(0, shuffled.length)
       .map((item, index) => ({
@@ -205,57 +253,76 @@ export class DoublePage implements OnInit {
         char: shuffled[index]
       }));
 
-    this.cards = this.generateLayout(this.simpleGrid5, 7, 3);
+    this.cards1 = this.generateLayout(this.simpleGrid1, 7, 3);
+    this.cards2 = this.generateLayout(this.simpleGrid2, 7, 3);
+    this.cards3 = this.generateLayout(this.simpleGrid3, 7, 3);
+    this.cards4 = this.generateLayout(this.simpleGrid4, 7, 3);
+    this.cards5 = this.generateLayout(this.simpleGrid5, 7, 3);
   }
+
+  /*
+  prepareGrid() {
+    if (!this.selectedRed.length && !this.selectedBlue.length) return;
+  
+    const shuffled = [...this.selectedRed, ...this.selectedBlue]
+      .sort(() => Math.random() - 0.5);
+  
+    this.levels.forEach(level => {
+      const preparedGrid: GridItem[] = level.grid
+        .slice(0, shuffled.length)
+        .map((item, index): GridItem => {
+          const char = shuffled[index];
+          const color: Color = this.selectedRed.includes(char) ? 'red' : 'blue';
+  
+          return {
+            ...item,
+            char,
+            color
+          };
+        });
+  
+      level.grid = preparedGrid;
+      level.cards = this.generateLayout(preparedGrid, 7, 3);
+    });
+  }
+  */
 
   prepareGrid() {
-    console.log(this.selectedRed, this.selectedBlue)
-    if (!this.selectedRed.length) return;
+    if (!this.selectedRed.length && !this.selectedBlue.length) return;
 
-    const shuffled = [...this.selectedRed, ...this.selectedBlue].sort(() => Math.random() - 0.5);
+    const shuffled = [...this.selectedRed, ...this.selectedBlue]
+      .sort(() => Math.random() - 0.5);
 
-    this.level1Grid = this.level1Grid
-      .slice(0, shuffled.length)
-      .map((item, index) => ({
-        ...item,
-        char: shuffled[index]
-      }));
+    const levels: { grid: GridItem[]; cardsKey: CardsKey }[] = [
+      { grid: this.level1Grid, cardsKey: 'cards1' },
+      { grid: this.level2Grid, cardsKey: 'cards2' },
+      { grid: this.level3Grid, cardsKey: 'cards3' },
+      { grid: this.level4Grid, cardsKey: 'cards4' },
+      { grid: this.level5Grid, cardsKey: 'cards5' }
+    ];
 
-    this.level2Grid = this.level2Grid
-      .slice(0, shuffled.length)
-      .map((item, index) => ({
-        ...item,
-        char: shuffled[index]
-      }));
+    levels.forEach(level => {
+      const preparedGrid: GridItem[] = level.grid
+        .slice(0, shuffled.length)
+        .map((item, index): GridItem => {
+          const char = shuffled[index];
 
-    this.level3Grid = this.level3Grid
-      .slice(0, shuffled.length)
-      .map((item, index) => ({
-        ...item,
-        char: shuffled[index]
-      }));
+          const color: Color = this.selectedRed.includes(char)
+            ? 'red'
+            : 'blue';
 
-    this.level4Grid = this.level4Grid
-      .slice(0, shuffled.length)
-      .map((item, index) => ({
-        ...item,
-        char: shuffled[index]
-      }));
+          return {
+            ...item,
+            char,
+            color
+          };
+        });
 
-
-    this.level5Grid = this.level5Grid
-      .slice(0, shuffled.length)
-      .map((item, index) => ({
-        ...item,
-        char: shuffled[index]
-      }));
-
-    this.cards1 = this.generateLayout(this.level1Grid, 7, 3);
-    this.cards2 = this.generateLayout(this.level2Grid, 7, 3);
-    this.cards3 = this.generateLayout(this.level3Grid, 7, 3);
-    this.cards4 = this.generateLayout(this.level4Grid, 7, 3);
-    this.cards5 = this.generateLayout(this.level5Grid, 7, 3);
+      this[level.cardsKey] = this.generateLayout(preparedGrid, 7, 3);
+      level.grid.splice(0, level.grid.length, ...preparedGrid);
+    });
   }
+
 
   generateLayout(
     grid: GridItem[],
@@ -282,16 +349,56 @@ export class DoublePage implements OnInit {
   selectOptions(target: string) {
     const index = this.selected.indexOf(target);
     this.helpers.play(target);
+    this.clicar(target)
 
     if (index >= 0) {
       this.selected.splice(index, 1);
     } else if (this.selected.length < 5) {
       this.selected.push(target);
     }
-    console.log(this.selected)
+    // console.log(this.selected)
   }
 
   play(src: string) {
     this.helpers.play(src);
+  }
+
+  begin() {
+    this.sequencias.push(this.selectedRed);
+    this.sequencias.push(this.selectedBlue);
+
+    this.sequenciaCorreta = this.sequencias[this.sequenciaAtualIndex];
+    this.progressoClique = 0;
+  }
+
+  clicar(valor: string) {
+    console.log('etapa: ' + this.etapaAtual, 'progresso: ' + this.progressoClique, 'letra_correta: ' + this.sequenciaCorreta[this.progressoClique], 'clicado: ' + valor)
+
+    if (valor === this.sequenciaCorreta[this.progressoClique]) {
+      this.progressoClique++;
+      console.log('acertou')
+
+      if (this.progressoClique === this.sequenciaCorreta.length) {
+        console.log('completou primeira sequencia')
+        this.etapaAtual++;
+        this.sequenciaAtualIndex++;
+
+        if (this.sequenciaAtualIndex === this.sequencias.length) {
+          this.sequenciaAtualIndex = 0;
+        }
+        this.sequenciaCorreta = this.sequencias[this.sequenciaAtualIndex]
+
+        if (this.etapaAtual === 5) {
+          console.log('🎉 Jogo finalizado!')
+          return;
+        }
+
+        this.progressoClique = 0;
+      }
+
+    } else {
+      console.log('errou!')
+    }
+
   }
 }
