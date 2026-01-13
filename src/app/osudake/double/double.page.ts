@@ -47,8 +47,8 @@ export class DoublePage implements OnInit {
   progressoClique = 0;
 
   // --- Controle de etapa ---
-  etapaAtual = 1;
   TOTAL_ETAPAS = 5;
+  etapaAtual = 1;
   romanji = '';
 
   // --- Grid ---
@@ -203,6 +203,7 @@ export class DoublePage implements OnInit {
   // ------------------------
   // Preparar grid Red-only
   // ------------------------
+
   prepareRedGrid() {
     if (!this.selectedRed.length) return;
 
@@ -280,7 +281,7 @@ export class DoublePage implements OnInit {
       this.sequencias.push(this.selectedRed);
       this.sequencias.push(this.selectedBlue);
     }
-    //
+
 
     this.sequenciaAtualIndex = 0;
     this.sequenciaCorreta = this.sequencias[0];
@@ -408,7 +409,4 @@ export class DoublePage implements OnInit {
     this.clicar(target);
   }
 
-  play(src: string) {
-    this.helpers.play(src);
-  }
 }
