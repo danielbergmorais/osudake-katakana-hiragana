@@ -3,13 +3,8 @@ import { Router } from '@angular/router';
 import { caracterList } from 'src/services/caracter.list';
 import { TypeStateService } from 'src/services/type-state.service';
 import { HelpersService } from 'src/services/helpers.service';
+import { ToastController } from '@ionic/angular/standalone';
 
-
-
-//TODO
-//1 - Refatorar interfaces
-//2 - Usar função grid com array e não variaveis repetidas
-//3 - Replicar pro grid unico
 
 type Color = 'red' | 'blue';
 interface GridItem {
@@ -68,7 +63,7 @@ export class DoublePage implements OnInit {
   sequenciaCorreta: string[] = [];
   sequenciaAtualIndex = 0;
   etapaAtual = 1;
-  TOTAL_ETAPAS = 5;
+  TOTAL_ETAPAS = 2;
   progressoClique = 0;
   sequencias: string[][] = [];
 
@@ -183,7 +178,9 @@ export class DoublePage implements OnInit {
   constructor(
     private router: Router,
     private helpers: HelpersService,
-    private typeState: TypeStateService) {
+    private typeState: TypeStateService,
+    private toastController: ToastController
+  ) {
   }
 
   ngOnInit() {
@@ -391,7 +388,7 @@ export class DoublePage implements OnInit {
   private finalizarEtapa(): void {
     console.log(`etapa ${this.etapaAtual} finalizada`);
 
-    if (this.etapaAtual === 5) {
+    if (this.etapaAtual === this.TOTAL_ETAPAS) {
       this.finalizarJogo();
       return;
     }
@@ -424,9 +421,26 @@ export class DoublePage implements OnInit {
     }
   }
 
-  private finalizarJogo(): void {
+  private async finalizarJogo(): Promise<void> {
     this.gameOver = true;
     console.log('🎉 Jogo finalizado!');
+    const toast = await this.toastController.create({
+      message: `
+            <div class="toast-success">
+              <div class="text">
+                <div class="title">Bom trabalho! Você conseguiu!</div>
+                <div class="jp">よくできました! </div>
+                <div class="jp">おめでとうございます</div>
+              </div>
+            </div>
+    `,
+      icon: 'checkmark-circle',
+      duration: 5000,
+      position: 'bottom',
+      color: 'success',
+      cssClass: 'success-toast',
+    });
+    await toast.present();
   }
 
 }
