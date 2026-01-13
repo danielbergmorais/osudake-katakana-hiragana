@@ -20,13 +20,6 @@ interface Card {
   top: number;
   left: number;
 }
-interface Level {
-  grid: GridItem[];
-  cards: Card[]; // ou Card[][] se você tiver a interface
-}
-
-type CardsKey = 'cards1' | 'cards2' | 'cards3' | 'cards4' | 'cards5';
-
 
 @Component({
   selector: 'app-double',
@@ -49,12 +42,6 @@ export class DoublePage implements OnInit {
 
   cardsPorEtapa: Card[][] = []
 
-  cards1: Card[] = [];
-  cards2: Card[] = [];
-  cards3: Card[] = [];
-  cards4: Card[] = [];
-  cards5: Card[] = [];
-
   type$ = this.typeState.type$;
 
   shuffleRed: string[] = [];
@@ -63,7 +50,7 @@ export class DoublePage implements OnInit {
   sequenciaCorreta: string[] = [];
   sequenciaAtualIndex = 0;
   etapaAtual = 1;
-  TOTAL_ETAPAS = 2;
+  TOTAL_ETAPAS = 5;
   progressoClique = 0;
   sequencias: string[][] = [];
 
@@ -104,6 +91,7 @@ export class DoublePage implements OnInit {
       { char: 'あ', color: 'red', row: 4, col: 1 },
     ]
   ]
+
   doubleGrid: GridItem[][] = [
     [
       { char: 'う', color: 'red', row: 2, col: 1 },
@@ -174,7 +162,6 @@ export class DoublePage implements OnInit {
 
   ]
 
-
   constructor(
     private router: Router,
     private helpers: HelpersService,
@@ -226,8 +213,6 @@ export class DoublePage implements OnInit {
         this.generateLayout(cards, 7, 3)
       );
     });
-
-    console.log(this.cardsPorEtapa)
   }
 
 
@@ -256,19 +241,15 @@ export class DoublePage implements OnInit {
           };
         });
 
-      // gera layout da etapa
       this.cardsPorEtapa[etapaIndex] =
         this.generateLayout(preparedGrid, 7, 3);
 
-      // mantém doubleGrid sincronizado (se necessário)
       this.doubleGrid[etapaIndex].splice(
         0,
         this.doubleGrid[etapaIndex].length,
         ...preparedGrid
       );
     });
-
-    console.log(this.cardsPorEtapa);
   }
 
 
@@ -287,10 +268,6 @@ export class DoublePage implements OnInit {
       top: Math.round(rowStep * item.row),
       left: Math.round(colStep * item.col),
     }));
-  }
-
-  irParaOutraPagina() {
-    this.router.navigate(['/lesson']);
   }
 
   selectOptions(target: string) {
@@ -443,4 +420,7 @@ export class DoublePage implements OnInit {
     await toast.present();
   }
 
+  irParaOutraPagina() {
+    this.router.navigate(['/lesson']);
+  }
 }
