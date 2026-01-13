@@ -43,11 +43,16 @@ type CardsKey = 'cards1' | 'cards2' | 'cards3' | 'cards4' | 'cards5';
 
 export class DoublePage implements OnInit {
   selected: string[] = [];
+  selectedError: string[] = [];
+  gameOver = false;
+  sequenciasConcluidasNaEtapa = 0;
 
   options: string[] = [];
   selectedRed: string[] = [];
   selectedBlue: string[] = [];
   cards: Card[] = [];
+
+  cardsPorEtapa: Card[][] = []
 
   cards1: Card[] = [];
   cards2: Card[] = [];
@@ -62,128 +67,118 @@ export class DoublePage implements OnInit {
 
   sequenciaCorreta: string[] = [];
   sequenciaAtualIndex = 0;
-  etapaAtual = 0;
+  etapaAtual = 1;
+  TOTAL_ETAPAS = 5;
   progressoClique = 0;
   sequencias: string[][] = [];
 
-  simpleGrid1: GridItem[] = [
-    { char: 'う', color: 'red', row: 2, col: 1 },
-    { char: 'あ', color: 'red', row: 3, col: 2 },
-    { char: 'え', color: 'red', row: 2, col: 3 },
-    { char: 'お', color: 'red', row: 4, col: 1 },
-    { char: 'い', color: 'red', row: 4, col: 3 },
+  simpleGrid: GridItem[][] = [
+    [
+      { char: 'う', color: 'red', row: 2, col: 1 },
+      { char: 'あ', color: 'red', row: 3, col: 2 },
+      { char: 'え', color: 'red', row: 2, col: 3 },
+      { char: 'お', color: 'red', row: 4, col: 1 },
+      { char: 'い', color: 'red', row: 4, col: 3 },
+    ],
+    [
+      { char: 'け', color: 'blue', row: 3, col: 1 },
+      { char: 'か', color: 'blue', row: 5, col: 1 },
+      { char: 'く', color: 'blue', row: 4, col: 3 },
+      { char: 'き', color: 'blue', row: 2, col: 2 },
+      { char: 'こ', color: 'blue', row: 6, col: 2 },
+    ],
+    [
+      { char: 'う', color: 'red', row: 3, col: 1 },
+      { char: 'お', color: 'red', row: 2, col: 2 },
+      { char: 'い', color: 'red', row: 4, col: 2 },
+      { char: 'あ', color: 'red', row: 5, col: 3 },
+      { char: 'え', color: 'red', row: 3, col: 3 },
+    ],
+    [
+      { char: 'う', color: 'red', row: 1, col: 2 },
+      { char: 'お', color: 'red', row: 3, col: 3 },
+      { char: 'い', color: 'red', row: 3, col: 1 },
+      { char: 'あ', color: 'red', row: 3, col: 2 },
+      { char: 'え', color: 'red', row: 5, col: 2 },
+    ],
+    [
+      { char: 'う', color: 'red', row: 2, col: 3 },
+      { char: 'お', color: 'red', row: 2, col: 1 },
+      { char: 'い', color: 'red', row: 3, col: 2 },
+      { char: 'え', color: 'red', row: 5, col: 2 },
+      { char: 'あ', color: 'red', row: 4, col: 1 },
+    ]
   ]
-  simpleGrid2: GridItem[] = [
-    { char: 'け', color: 'blue', row: 3, col: 1 },
-    { char: 'か', color: 'blue', row: 5, col: 1 },
-    { char: 'く', color: 'blue', row: 4, col: 3 },
-    { char: 'き', color: 'blue', row: 2, col: 2 },
-    { char: 'こ', color: 'blue', row: 6, col: 2 },
+  doubleGrid: GridItem[][] = [
+    [
+      { char: 'う', color: 'red', row: 2, col: 1 },
+      { char: 'え', color: 'red', row: 2, col: 3 },
+      { char: 'あ', color: 'red', row: 3, col: 2 },
+      { char: 'お', color: 'red', row: 4, col: 1 },
+      { char: 'い', color: 'red', row: 7, col: 2 },
+
+      { char: 'こ', color: 'blue', row: 1, col: 2 },
+      { char: 'け', color: 'blue', row: 6, col: 3 },
+      { char: 'か', color: 'blue', row: 4, col: 3 },
+      { char: 'く', color: 'blue', row: 6, col: 1 },
+      { char: 'き', color: 'blue', row: 5, col: 2 },
+    ],
+    [
+      { char: 'け', color: 'blue', row: 3, col: 1 },
+      { char: 'か', color: 'blue', row: 5, col: 1 },
+      { char: 'こ', color: 'blue', row: 6, col: 2 },
+      { char: 'き', color: 'blue', row: 2, col: 2 },
+      { char: 'く', color: 'blue', row: 3, col: 3 },
+
+      { char: 'う', color: 'red', row: 1, col: 1 },
+      { char: 'あ', color: 'red', row: 7, col: 1 },
+      { char: 'え', color: 'red', row: 4, col: 2 },
+      { char: 'い', color: 'red', row: 1, col: 3 },
+      { char: 'お', color: 'red', row: 5, col: 3 },
+    ],
+    [
+      { char: 'う', color: 'red', row: 1, col: 1 },
+      { char: 'お', color: 'red', row: 2, col: 2 },
+      { char: 'い', color: 'red', row: 4, col: 2 },
+      { char: 'あ', color: 'red', row: 5, col: 3 },
+      { char: 'え', color: 'red', row: 3, col: 3 },
+
+      { char: 'こ', color: 'blue', row: 3, col: 1 },
+      { char: 'け', color: 'blue', row: 6, col: 1 },
+      { char: 'か', color: 'blue', row: 6, col: 2 },
+      { char: 'き', color: 'blue', row: 1, col: 3 },
+      { char: 'く', color: 'blue', row: 7, col: 3 },
+    ],
+    [
+
+      { char: 'こ', color: 'blue', row: 1, col: 1 },
+      { char: 'け', color: 'blue', row: 6, col: 1 },
+      { char: 'か', color: 'blue', row: 1, col: 2 },
+      { char: 'き', color: 'blue', row: 7, col: 2 },
+      { char: 'く', color: 'blue', row: 2, col: 3 },
+
+      { char: 'う', color: 'red', row: 4, col: 1 },
+      { char: 'お', color: 'red', row: 3, col: 2 },
+      { char: 'え', color: 'red', row: 5, col: 2 },
+      { char: 'い', color: 'red', row: 4, col: 3 },
+      { char: 'あ', color: 'red', row: 7, col: 3 },
+    ],
+    [
+      { char: 'い', color: 'red', row: 3, col: 1 },
+      { char: 'う', color: 'red', row: 7, col: 3 },
+      { char: 'お', color: 'red', row: 1, col: 2 },
+      { char: 'え', color: 'red', row: 6, col: 2 },
+      { char: 'あ', color: 'red', row: 7, col: 1 },
+
+      { char: 'き', color: 'blue', row: 4, col: 2 },
+      { char: 'こ', color: 'blue', row: 2, col: 3 },
+      { char: 'け', color: 'blue', row: 5, col: 3 },
+      { char: 'か', color: 'blue', row: 1, col: 1 },
+      { char: 'く', color: 'blue', row: 5, col: 1 },
+    ]
+
   ]
-  simpleGrid3: GridItem[] = [
-    { char: 'う', color: 'red', row: 3, col: 1 },
-    { char: 'お', color: 'red', row: 2, col: 2 },
-    { char: 'い', color: 'red', row: 4, col: 2 },
-    { char: 'あ', color: 'red', row: 5, col: 3 },
-    { char: 'え', color: 'red', row: 3, col: 3 },
-  ]
-  simpleGrid4: GridItem[] = [
-    { char: 'う', color: 'red', row: 1, col: 2 },
-    { char: 'お', color: 'red', row: 3, col: 3 },
-    { char: 'い', color: 'red', row: 3, col: 1 },
-    { char: 'あ', color: 'red', row: 3, col: 2 },
-    { char: 'え', color: 'red', row: 5, col: 2 },
-  ]
-  simpleGrid5: GridItem[] = [
-    { char: 'う', color: 'red', row: 2, col: 3 },
-    { char: 'お', color: 'red', row: 2, col: 1 },
-    { char: 'い', color: 'red', row: 3, col: 2 },
-    { char: 'え', color: 'red', row: 5, col: 2 },
-    { char: 'あ', color: 'red', row: 4, col: 1 },
-  ]
 
-
-  level1Grid: GridItem[] = [
-    { char: 'う', color: 'red', row: 2, col: 1 },
-    { char: 'え', color: 'red', row: 2, col: 3 },
-    { char: 'あ', color: 'red', row: 3, col: 2 },
-    { char: 'お', color: 'red', row: 4, col: 1 },
-    { char: 'い', color: 'red', row: 7, col: 2 },
-
-    { char: 'こ', color: 'blue', row: 1, col: 2 },
-    { char: 'け', color: 'blue', row: 6, col: 3 },
-    { char: 'か', color: 'blue', row: 4, col: 3 },
-    { char: 'く', color: 'blue', row: 6, col: 1 },
-    { char: 'き', color: 'blue', row: 5, col: 2 },
-  ];
-
-  level2Grid: GridItem[] = [
-
-    { char: 'け', color: 'blue', row: 3, col: 1 },
-    { char: 'か', color: 'blue', row: 5, col: 1 },
-    { char: 'こ', color: 'blue', row: 6, col: 2 },
-    { char: 'き', color: 'blue', row: 2, col: 2 },
-    { char: 'く', color: 'blue', row: 3, col: 3 },
-
-    { char: 'う', color: 'red', row: 1, col: 1 },
-    { char: 'あ', color: 'red', row: 7, col: 1 },
-    { char: 'え', color: 'red', row: 4, col: 2 },
-    { char: 'い', color: 'red', row: 1, col: 3 },
-    { char: 'お', color: 'red', row: 5, col: 3 },
-
-  ];
-
-  level3Grid: GridItem[] = [
-
-    { char: 'う', color: 'red', row: 1, col: 1 },
-    { char: 'お', color: 'red', row: 2, col: 2 },
-    { char: 'い', color: 'red', row: 4, col: 2 },
-    { char: 'あ', color: 'red', row: 5, col: 3 },
-    { char: 'え', color: 'red', row: 3, col: 3 },
-
-    { char: 'こ', color: 'blue', row: 3, col: 1 },
-    { char: 'け', color: 'blue', row: 6, col: 1 },
-    { char: 'か', color: 'blue', row: 6, col: 2 },
-    { char: 'き', color: 'blue', row: 1, col: 3 },
-    { char: 'く', color: 'blue', row: 7, col: 3 },
-  ];
-
-  level4Grid: GridItem[] = [
-
-    { char: 'こ', color: 'blue', row: 1, col: 1 },
-    { char: 'け', color: 'blue', row: 6, col: 1 },
-    { char: 'か', color: 'blue', row: 1, col: 2 },
-    { char: 'き', color: 'blue', row: 7, col: 2 },
-    { char: 'く', color: 'blue', row: 2, col: 3 },
-
-    { char: 'う', color: 'red', row: 4, col: 1 },
-    { char: 'お', color: 'red', row: 3, col: 2 },
-    { char: 'え', color: 'red', row: 5, col: 2 },
-    { char: 'い', color: 'red', row: 4, col: 3 },
-    { char: 'あ', color: 'red', row: 7, col: 3 },
-  ];
-
-  level5Grid: GridItem[] = [
-    { char: 'い', color: 'red', row: 3, col: 1 },
-    { char: 'う', color: 'red', row: 7, col: 3 },
-    { char: 'お', color: 'red', row: 1, col: 2 },
-    { char: 'え', color: 'red', row: 6, col: 2 },
-    { char: 'あ', color: 'red', row: 7, col: 1 },
-
-    { char: 'き', color: 'blue', row: 4, col: 2 },
-    { char: 'こ', color: 'blue', row: 2, col: 3 },
-    { char: 'け', color: 'blue', row: 5, col: 3 },
-    { char: 'か', color: 'blue', row: 1, col: 1 },
-    { char: 'く', color: 'blue', row: 5, col: 1 },
-  ];
-
-  levels = {
-    level1: this.generateLayout(this.simpleGrid1, 7, 3),
-    // level2: this.generateLayout(this.level2Grid, 7, 3),
-    // level3: this.generateLayout(this.level3Grid, 7, 3),
-    // level4: this.generateLayout(this.level4Grid, 7, 3),
-    // level5: this.generateLayout(this.level4Grid, 7, 3),
-  };
 
   constructor(
     private router: Router,
@@ -222,87 +217,33 @@ export class DoublePage implements OnInit {
 
     const shuffled = [...this.selectedRed].sort(() => Math.random() - 0.5);
 
-    this.simpleGrid1 = this.simpleGrid1
-      .slice(0, shuffled.length)
-      .map((item, index) => ({
-        ...item,
-        char: shuffled[index]
-      }));
-    this.simpleGrid2 = this.simpleGrid2
-      .slice(0, shuffled.length)
-      .map((item, index) => ({
-        ...item,
-        char: shuffled[index]
-      }));
-    this.simpleGrid3 = this.simpleGrid3
-      .slice(0, shuffled.length)
-      .map((item, index) => ({
-        ...item,
-        char: shuffled[index]
-      }));
-    this.simpleGrid4 = this.simpleGrid4
-      .slice(0, shuffled.length)
-      .map((item, index) => ({
-        ...item,
-        char: shuffled[index]
-      }));
-    this.simpleGrid5 = this.simpleGrid5
-      .slice(0, shuffled.length)
-      .map((item, index) => ({
-        ...item,
-        char: shuffled[index]
-      }));
-
-    this.cards1 = this.generateLayout(this.simpleGrid1, 7, 3);
-    this.cards2 = this.generateLayout(this.simpleGrid2, 7, 3);
-    this.cards3 = this.generateLayout(this.simpleGrid3, 7, 3);
-    this.cards4 = this.generateLayout(this.simpleGrid4, 7, 3);
-    this.cards5 = this.generateLayout(this.simpleGrid5, 7, 3);
-  }
-
-  /*
-  prepareGrid() {
-    if (!this.selectedRed.length && !this.selectedBlue.length) return;
-  
-    const shuffled = [...this.selectedRed, ...this.selectedBlue]
-      .sort(() => Math.random() - 0.5);
-  
-    this.levels.forEach(level => {
-      const preparedGrid: GridItem[] = level.grid
+    this.simpleGrid.forEach(grid => {
+      const cards = grid
         .slice(0, shuffled.length)
-        .map((item, index): GridItem => {
-          const char = shuffled[index];
-          const color: Color = this.selectedRed.includes(char) ? 'red' : 'blue';
-  
-          return {
-            ...item,
-            char,
-            color
-          };
-        });
-  
-      level.grid = preparedGrid;
-      level.cards = this.generateLayout(preparedGrid, 7, 3);
-    });
-  }
-  */
+        .map((item, index) => ({
+          ...item,
+          char: shuffled[index]
+        }));
 
-  prepareGrid() {
+      this.cardsPorEtapa.push(
+        this.generateLayout(cards, 7, 3)
+      );
+    });
+
+    console.log(this.cardsPorEtapa)
+  }
+
+
+  prepareGrid(): void {
     if (!this.selectedRed.length && !this.selectedBlue.length) return;
 
     const shuffled = [...this.selectedRed, ...this.selectedBlue]
       .sort(() => Math.random() - 0.5);
 
-    const levels: { grid: GridItem[]; cardsKey: CardsKey }[] = [
-      { grid: this.level1Grid, cardsKey: 'cards1' },
-      { grid: this.level2Grid, cardsKey: 'cards2' },
-      { grid: this.level3Grid, cardsKey: 'cards3' },
-      { grid: this.level4Grid, cardsKey: 'cards4' },
-      { grid: this.level5Grid, cardsKey: 'cards5' }
-    ];
+    this.cardsPorEtapa = [];
 
-    levels.forEach(level => {
-      const preparedGrid: GridItem[] = level.grid
+    this.doubleGrid.forEach((grid, etapaIndex) => {
+      const preparedGrid: GridItem[] = grid
         .slice(0, shuffled.length)
         .map((item, index): GridItem => {
           const char = shuffled[index];
@@ -318,9 +259,19 @@ export class DoublePage implements OnInit {
           };
         });
 
-      this[level.cardsKey] = this.generateLayout(preparedGrid, 7, 3);
-      level.grid.splice(0, level.grid.length, ...preparedGrid);
+      // gera layout da etapa
+      this.cardsPorEtapa[etapaIndex] =
+        this.generateLayout(preparedGrid, 7, 3);
+
+      // mantém doubleGrid sincronizado (se necessário)
+      this.doubleGrid[etapaIndex].splice(
+        0,
+        this.doubleGrid[etapaIndex].length,
+        ...preparedGrid
+      );
     });
+
+    console.log(this.cardsPorEtapa);
   }
 
 
@@ -345,18 +296,9 @@ export class DoublePage implements OnInit {
     this.router.navigate(['/lesson']);
   }
 
-
   selectOptions(target: string) {
-    const index = this.selected.indexOf(target);
     this.helpers.play(target);
     this.clicar(target)
-
-    if (index >= 0) {
-      this.selected.splice(index, 1);
-    } else if (this.selected.length < 5) {
-      this.selected.push(target);
-    }
-    // console.log(this.selected)
   }
 
   play(src: string) {
@@ -371,34 +313,120 @@ export class DoublePage implements OnInit {
     this.progressoClique = 0;
   }
 
-  clicar(valor: string) {
-    console.log('etapa: ' + this.etapaAtual, 'progresso: ' + this.progressoClique, 'letra_correta: ' + this.sequenciaCorreta[this.progressoClique], 'clicado: ' + valor)
+  clicar(valor: string): void {
+    if (this.gameOver) return;
 
-    if (valor === this.sequenciaCorreta[this.progressoClique]) {
-      this.progressoClique++;
-      console.log('acertou')
+    const esperado = this.sequenciaCorreta[this.progressoClique];
 
-      if (this.progressoClique === this.sequenciaCorreta.length) {
-        console.log('completou primeira sequencia')
-        this.etapaAtual++;
-        this.sequenciaAtualIndex++;
+    console.log(
+      `etapa: ${this.etapaAtual}`,
+      `progresso: ${this.progressoClique}`,
+      `esperado: ${esperado}`,
+      `clicado: ${valor}`
+    );
 
-        if (this.sequenciaAtualIndex === this.sequencias.length) {
-          this.sequenciaAtualIndex = 0;
-        }
-        this.sequenciaCorreta = this.sequencias[this.sequenciaAtualIndex]
-
-        if (this.etapaAtual === 5) {
-          console.log('🎉 Jogo finalizado!')
-          return;
-        }
-
-        this.progressoClique = 0;
-      }
-
+    if (valor === esperado) {
+      this.tratarAcerto(valor);
     } else {
-      console.log('errou!')
+      this.tratarErro(valor);
+    }
+  }
+
+  private tratarAcerto(valor: string): void {
+    console.log('acertou');
+    this.selectedError = [];
+    this.progressoClique++;
+
+    // Acertos são acumulativos na etapa
+    this.marcarComoSelecionado(valor);
+
+    // Remove erro apenas se o valor ainda não for parte da etapa
+    this.removerErroSeExistir(valor);
+
+    if (this.sequenciaCompleta()) {
+      this.avancarSequencia();
+    }
+  }
+
+  private sequenciaCompleta(): boolean {
+    return this.progressoClique === this.sequenciaCorreta.length;
+  }
+
+  private marcarComoSelecionado(valor: string): void {
+    if (!this.selected.includes(valor)) {
+      this.selected.push(valor);
+    }
+  }
+
+  private removerErroSeExistir(valor: string): void {
+    this.selectedError = this.selectedError.filter(v => v !== valor);
+  }
+
+  private avancarSequencia(): void {
+    console.log('sequência completa');
+
+    this.sequenciasConcluidasNaEtapa++;
+
+    if (this.todasSequenciasConcluidas()) {
+      this.finalizarEtapa();
+      return;
     }
 
+    this.progressoClique = 0;
+    this.proximaSequencia();
   }
+
+  private todasSequenciasConcluidas(): boolean {
+    return this.sequenciasConcluidasNaEtapa === this.sequencias.length;
+  }
+
+
+  private proximaSequencia(): void {
+    this.sequenciaAtualIndex =
+      (this.sequenciaAtualIndex + 1) % this.sequencias.length;
+
+    this.sequenciaCorreta = this.sequencias[this.sequenciaAtualIndex];
+  }
+
+  private finalizarEtapa(): void {
+    console.log(`etapa ${this.etapaAtual} finalizada`);
+
+    if (this.etapaAtual === 5) {
+      this.finalizarJogo();
+      return;
+    }
+
+    this.etapaAtual++;
+    this.resetarEstadoEtapa();
+    this.resetarControleSequencias();
+  }
+
+  private resetarControleSequencias(): void {
+    this.sequenciasConcluidasNaEtapa = 0;
+    this.progressoClique = 0;
+    this.sequenciaAtualIndex = 0;
+    this.sequenciaCorreta = this.sequencias[0];
+  }
+
+  private resetarEstadoEtapa(): void {
+    this.selected = [];
+    this.selectedError = [];
+  }
+
+  private tratarErro(valor: string): void {
+    console.log('errou');
+
+    // Se já foi correto em alguma sequência da etapa, ignora
+    if (this.selected.includes(valor)) return;
+
+    if (!this.selectedError.includes(valor)) {
+      this.selectedError.push(valor);
+    }
+  }
+
+  private finalizarJogo(): void {
+    this.gameOver = true;
+    console.log('🎉 Jogo finalizado!');
+  }
+
 }

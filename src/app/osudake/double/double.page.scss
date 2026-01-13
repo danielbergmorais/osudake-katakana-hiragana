@@ -55,10 +55,10 @@
   transform: translate(-50%, -50%);
 
   &.success {
-    border: 4px #2dd55b solid;
+    border: 4px #2dd55b solid !important;
   }
 
   &.error {
-    border: 4px #f24c58 solid;
+    border: 4px #f24c58 solid !important;
   }
 }

@@ -15,35 +15,16 @@
   </ion-header>
 
   <div class="container">
-    <div *ngFor="let card of cards1" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
-      [class.success]="selected.includes(card.char)" (click)="selectOptions(card.char)" [style.left.%]="card.left"
-      style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
+    <div *ngFor="let etapa of cardsPorEtapa; index as i">
+      <ng-container *ngIf="i == etapaAtual - 1">
+        <div *ngFor="let card of etapa" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
+          [class.success]="selected.includes(card.char)" [class.error]="selectedError.includes(card.char)"
+          (click)="selectOptions(card.char)" [style.left.%]="card.left"
+          style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
+        </div>
+      </ng-container>
     </div>
   </div>
-  <!-- <br> <br>
-  <div class="container">
-    <div *ngFor="let card of cards2" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
-      [style.left.%]="card.left" style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
-    </div>
-  </div>
-  <br> <br>
-  <div class="container">
-    <div *ngFor="let card of cards3" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
-      [style.left.%]="card.left" style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
-    </div>
-  </div>
-  <br> <br>
-  <div class="container">
-    <div *ngFor="let card of cards4" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
-      [style.left.%]="card.left" style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
-    </div>
-  </div>
-  <br> <br>
-  <div class="container">
-    <div *ngFor="let card of cards5" class="osu" [ngClass]="card.color" [style.top.%]="card.top"
-      [style.left.%]="card.left" style="background-image: url('assets/{{type$ | async}}/glyphs/{{card.char}}.png');">
-    </div>
-  </div> -->
 
 
 </ion-content>
