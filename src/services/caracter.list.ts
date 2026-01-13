@@ -1,4 +1,7 @@
-
+type Caracter = {
+    hiragana: string;
+    katakana: string;
+};
 
 export const caracterList = [
     ['a', 'i', 'u', 'e', 'o'],
@@ -35,7 +38,7 @@ export const caracterList = [
     ['pya', 'pyu', 'pyo'],
 ]
 
-export const caracterListObj = [
+export const caracterListObj: Record<string, Caracter>[] = [
     {
         a: { hiragana: 'あ', katakana: 'ア' },
         i: { hiragana: 'い', katakana: 'イ' },
@@ -204,3 +207,13 @@ export const caracterListObj = [
 
 ]
 
+function encontrarCaracter<T>(
+    chave: string
+): Caracter | undefined {
+    for (const obj of caracterListObj) {
+        if (obj[chave]) {
+            return obj[chave];
+        }
+    }
+    return undefined;
+}
