@@ -34,6 +34,7 @@ export class LessonPage implements OnInit {
 
   /*
   - TODO 
+  - Ajustar para aceitar apenas uma opção
   - Voltar pro inicio
   */
 
@@ -54,8 +55,11 @@ export class LessonPage implements OnInit {
       this.etapasMaximas = lessonsArray.length;
     }
 
-    this.options[0].sort(() => Math.random() - 0.5);
-    this.options[1].sort(() => Math.random() - 0.5);
+
+    this.options.forEach(group => {
+      group.sort(() => Math.random() - 0.5);
+    });
+
     this.randomLessons = this.getRandomLessons(this.lessons, 5);
   }
 
@@ -75,22 +79,26 @@ export class LessonPage implements OnInit {
 
   // selecionar as opções das liçoes dos grupos selecionados
   trazerLicoes(
-    primeiro: string[][],
-    segundo: Record<string, Lesson>
+    grupos: string[][],
+    lessons: Record<string, Lesson>
   ): Record<string, Lesson> {
 
-    const validos = new Set([...primeiro[0], ...primeiro[1]]);
+    const validos = new Set(
+      grupos.reduce((acc, g) => acc.concat(g), [] as string[])
+    );
 
     const resultado: Record<string, Lesson> = {};
 
-    for (const [chave, lesson] of Object.entries(segundo)) {
+    for (const [chave, lesson] of Object.entries(lessons)) {
       if (lesson.glyphs.every(g => validos.has(g))) {
         resultado[chave] = lesson;
       }
     }
-    this.lessons = resultado
+
+    this.lessons = resultado;
     return resultado;
   }
+
 
   // tratar o clique
   clicar(target: string) {
