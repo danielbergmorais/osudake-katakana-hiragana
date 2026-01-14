@@ -16,26 +16,32 @@ type LessonsMap = Record<string, Lesson>;
 })
 
 export class LessonPage implements OnInit {
+  // --- Lições ---
   allLesson = lessonList;
-  opt: string[] = [];
-  options: string[][] = [];
   lessons!: Record<string, Lesson>;
   randomLessons: Lesson[] = [];
 
+  // Opções selecionadas
+  opt: string[] = [];
+  options: string[][] = [];
+
+  // --- Controle de etapa ---
   etapaAtual = 1;
   letraAtual = 0;
   etapasMaximas = 5;
   gameOver = false;
 
+  // --- Estado do jogo ---
   selected: string[] = [];
   selectedError: string[] = [];
 
+  // --- Serviços ---
   type$ = this.typeState.type$;
 
   /*
-  - TODO 
-  - Ajustar para aceitar apenas uma opção
-  - Voltar pro inicio
+   - TODO 
+   - Ajustar para katakana
+   - Voltar pro inicio
   */
 
   constructor(
@@ -63,21 +69,27 @@ export class LessonPage implements OnInit {
     this.randomLessons = this.getRandomLessons(this.lessons, 5);
   }
 
-  //Carregar opções selecionadas do inicio
+  // ------------------------
+  // Carregar opções selecionadas do inicio
+  // ------------------------
   carregarDoStorage() {
     const op = localStorage.getItem('options');
     if (!op) return;
     this.opt = JSON.parse(op);
   }
 
-  // recuperar os grupos pertencentes as opções
+  // ------------------------
+  // Recuperar os grupos pertencentes as opções
+  // ------------------------
   recuperarGrupos() {
     this.options = this.opt
       .map(opt => caracterList.find(group => group[0] === opt))
       .filter((g): g is string[] => !!g);
   }
 
-  // selecionar as opções das liçoes dos grupos selecionados
+  // ------------------------
+  // Selecionar as opções das liçoes dos grupos selecionados
+  // ------------------------
   trazerLicoes(
     grupos: string[][],
     lessons: Record<string, Lesson>
@@ -99,8 +111,9 @@ export class LessonPage implements OnInit {
     return resultado;
   }
 
-
-  // tratar o clique
+  // ------------------------
+  // Tratar o clique
+  // ------------------------
   clicar(target: string) {
     this.helpers.play(target);
     const palavra = this.randomLessons[this.etapaAtual - 1];
@@ -134,6 +147,7 @@ export class LessonPage implements OnInit {
   irParaOutraPagina() {
     this.router.navigateByUrl('/tabs/home', { replaceUrl: true });
   }
+  
   getRandomLessons(
     lessons: LessonsMap,
     amount: number

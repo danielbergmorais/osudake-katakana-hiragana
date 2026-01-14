@@ -160,6 +160,7 @@ export class DoublePage implements OnInit {
     ]
 
   ]
+  
   // --- Serviços ---
   type$ = this.typeState.type$;
 
