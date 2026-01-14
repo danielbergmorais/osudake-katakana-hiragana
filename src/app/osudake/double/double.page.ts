@@ -395,9 +395,6 @@ export class DoublePage implements OnInit {
       cssClass: 'success-toast',
     });
     await toast.present();
-  }
-
-  irParaOutraPagina() {
     this.router.navigate(['/lesson']);
   }
 

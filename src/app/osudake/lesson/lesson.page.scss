@@ -39,14 +39,40 @@
             width: 40%;
             margin-top: 10px;
             text-align: left;
+
+            p:first-child {
+                text-transform: capitalize;
+            }
+
+            p {
+                text-transform: uppercase;
+            }
+
+            strong {
+                text-transform: none;
+            }
         }
     }
 
     .glyphs {
-        display: inline-flex;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .congratz {
+        display: block;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        min-width: 300px;
+        min-height: 500px;
         width: 100%;
+        padding-top: 320px;
+
+        h1 {
+            color: black;
+            font-family: Raleway, "sans-serif";
+        }
     }
 }
 
