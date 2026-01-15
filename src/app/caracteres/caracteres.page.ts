@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { caracterList } from 'src/services/caracter.list';
 import { HelpersService } from 'src/services/helpers.service';
 import { TypeStateService } from 'src/services/type-state.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-caracteres',
@@ -22,7 +21,6 @@ export class CaracteresPage {
   ) { }
 
   ngOnInit() {
-
   }
 
   play(src: string) {

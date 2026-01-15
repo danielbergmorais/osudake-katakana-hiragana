@@ -27,28 +27,29 @@ interface Card {
   styleUrls: ['./double.page.scss'],
   standalone: false,
 })
+
 export class DoublePage implements OnInit {
   // --- Estado do jogo ---
   selected: string[] = [];
   selectedError: string[] = [];
   gameOver = false;
-  sequenciasConcluidasNaEtapa = 0;
+  progressoClique = 0;
 
   // --- Seleções ---
   options: string[] = [];
   selectedRed: string[] = [];
   selectedBlue: string[] = [];
-  cardsPorEtapa: Card[][] = [];
+  cardsPerStep: Card[][] = [];
 
   // --- Sequências ---
-  sequencias: string[][] = [];
-  sequenciaCorreta: string[] = [];
-  sequenciaAtualIndex = 0;
-  progressoClique = 0;
+  sequences: string[][] = [];
+  sequenceCorrect: string[] = [];
+  sequenceIndex = 0;
+  sequencesFinishedsInActualStep = 0;
 
   // --- Controle de etapa ---
   TOTAL_ETAPAS = 5;
-  etapaAtual = 1;
+  step = 1;
   romanji = '';
 
   // --- Grid ---
@@ -160,7 +161,7 @@ export class DoublePage implements OnInit {
     ]
 
   ]
-  
+
   // --- Serviços ---
   type$ = this.typeState.type$;
 
@@ -204,13 +205,12 @@ export class DoublePage implements OnInit {
   // ------------------------
   // Preparar grid Red-only
   // ------------------------
-
   prepareRedGrid() {
     if (!this.selectedRed.length) return;
 
     const shuffled = [...this.selectedRed].sort(() => Math.random() - 0.5);
 
-    this.cardsPorEtapa = [];
+    this.cardsPerStep = [];
 
     this.simpleGrid.forEach((grid, etapaIndex) => {
       const preparedGrid: GridItem[] = grid
@@ -220,7 +220,7 @@ export class DoublePage implements OnInit {
           char: shuffled[index],
         }));
 
-      this.cardsPorEtapa[etapaIndex] = this.generateLayout(preparedGrid, 7, 3);
+      this.cardsPerStep[etapaIndex] = this.generateLayout(preparedGrid, 7, 3);
     });
   }
 
@@ -234,7 +234,7 @@ export class DoublePage implements OnInit {
       () => Math.random() - 0.5
     );
 
-    this.cardsPorEtapa = [];
+    this.cardsPerStep = [];
 
     this.doubleGrid.forEach((grid, etapaIndex) => {
       const preparedGrid: GridItem[] = grid
@@ -245,7 +245,7 @@ export class DoublePage implements OnInit {
           return { ...item, char, color };
         });
 
-      this.cardsPorEtapa[etapaIndex] = this.generateLayout(preparedGrid, 7, 3);
+      this.cardsPerStep[etapaIndex] = this.generateLayout(preparedGrid, 7, 3);
 
       this.doubleGrid[etapaIndex].splice(
         0,
@@ -274,40 +274,41 @@ export class DoublePage implements OnInit {
   // Inicia sequência
   // ------------------------
   begin(redOnly = false) {
-    this.sequencias = [];
+    this.sequences = [];
 
     if (redOnly) {
-      this.sequencias.push(this.selectedRed);
+      this.sequences.push(this.selectedRed);
     } else {
-      this.sequencias.push(this.selectedRed);
-      this.sequencias.push(this.selectedBlue);
+      this.sequences.push(this.selectedRed);
+      this.sequences.push(this.selectedBlue);
     }
 
-
-    this.sequenciaAtualIndex = 0;
-    this.sequenciaCorreta = this.sequencias[0];
+    this.sequenceIndex = 0;
+    this.sequenceCorrect = this.sequences[0];
     this.progressoClique = 0;
-    this.sequenciasConcluidasNaEtapa = 0;
-    this.romanji = this.sequenciaCorreta[this.progressoClique];
+    this.sequencesFinishedsInActualStep = 0;
+    this.romanji = this.sequenceCorrect[this.progressoClique];
   }
 
   // ------------------------
   // Clique em letra
   // ------------------------
-  clicar(valor: string) {
+  click(valor: string) {
     if (this.gameOver) return;
 
-    const esperado = this.sequenciaCorreta[this.progressoClique];
+    this.helpers.play(valor);
+
+    const esperado = this.sequenceCorrect[this.progressoClique];
 
     if (valor === esperado) {
-      this.tratarAcerto(valor);
-      this.romanji = this.sequenciaCorreta[this.progressoClique];
+      this.isCorrect(valor);
+      this.romanji = this.sequenceCorrect[this.progressoClique];
     } else {
-      this.tratarErro(valor);
+      this.isWrong(valor);
     }
   }
 
-  private tratarAcerto(valor: string) {
+  private isCorrect(valor: string) {
     this.selectedError = [];
     this.progressoClique++;
 
@@ -316,67 +317,67 @@ export class DoublePage implements OnInit {
     // Remove erros se existirem
     this.selectedError = this.selectedError.filter(v => v !== valor);
 
-    if (this.sequenciaCompleta()) this.avancarSequencia();
+    if (this.sequenceIsComplete()) this.nextSequence();
   }
 
-  private tratarErro(valor: string) {
+  private isWrong(valor: string) {
     if (!this.selected.includes(valor) && !this.selectedError.includes(valor)) {
       this.selectedError.push(valor);
     }
   }
 
-  private sequenciaCompleta(): boolean {
-    return this.progressoClique === this.sequenciaCorreta.length;
+  private sequenceIsComplete(): boolean {
+    return this.progressoClique === this.sequenceCorrect.length;
   }
 
-  private avancarSequencia() {
-    this.sequenciasConcluidasNaEtapa++;
+  private nextSequence() {
+    this.sequencesFinishedsInActualStep++;
 
-    if (this.todasSequenciasConcluidas()) {
-      this.finalizarEtapa();
+    if (this.isAllSequenceFinisheds()) {
+      this.finishingStep();
       return;
     }
 
     this.progressoClique = 0;
-    this.sequenciaAtualIndex =
-      (this.sequenciaAtualIndex + 1) % this.sequencias.length;
-    this.sequenciaCorreta = this.sequencias[this.sequenciaAtualIndex];
+    this.sequenceIndex =
+      (this.sequenceIndex + 1) % this.sequences.length;
+    this.sequenceCorrect = this.sequences[this.sequenceIndex];
   }
 
-  private todasSequenciasConcluidas(): boolean {
-    return this.sequenciasConcluidasNaEtapa === this.sequencias.length;
+  private isAllSequenceFinisheds(): boolean {
+    return this.sequencesFinishedsInActualStep === this.sequences.length;
   }
 
   // ------------------------
   // Finalização de etapa
   // ------------------------
-  private finalizarEtapa() {
-    if (this.etapaAtual === this.TOTAL_ETAPAS) {
-      this.finalizarJogo();
+  private finishingStep() {
+    if (this.step === this.TOTAL_ETAPAS) {
+      this.finishingGame();
       return;
     }
 
-    this.etapaAtual++;
-    this.resetarEstadoEtapa();
-    this.resetarControleSequencias();
+    this.step++;
+    this.resetSteps();
+    this.resetControlSequence();
   }
 
-  private resetarEstadoEtapa() {
+  private resetSteps() {
     this.selected = [];
     this.selectedError = [];
   }
 
-  private resetarControleSequencias() {
-    this.sequenciasConcluidasNaEtapa = 0;
+  private resetControlSequence() {
+    this.sequencesFinishedsInActualStep = 0;
     this.progressoClique = 0;
-    this.sequenciaAtualIndex = 0;
-    this.sequenciaCorreta = this.sequencias[0];
+    this.sequenceIndex = 0;
+    this.sequenceCorrect = this.sequences[0];
   }
 
   // ------------------------
   // Finalização de jogo
   // ------------------------
-  private async finalizarJogo() {
+  private async finishingGame() {
     this.gameOver = true;
 
     const toast = await this.toastController.create({
@@ -397,14 +398,6 @@ export class DoublePage implements OnInit {
     });
     await toast.present();
     this.router.navigate(['/lesson']);
-  }
-
-  // ------------------------
-  // Função de helper para tocar som e clicar
-  // ------------------------
-  selectOptions(target: string) {
-    this.helpers.play(target);
-    this.clicar(target);
   }
 
 }
